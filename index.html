@@ -47,6 +47,11 @@
       background: #ff4b2b;
     }
 
+    .gmail-btn {
+      background: #d93025;
+      width: 100%;
+    }
+
     .email-box {
       background: white;
       color: black;
@@ -61,7 +66,6 @@
 
     .copy-btn {
       background: green;
-      margin-right: 10px;
     }
 
     pre {
@@ -88,13 +92,16 @@
     <option value="informal">Informal</option>
   </select>
 
-  <label>Recipient:</label>
-  <input type="text" id="recipient">
+  <label>Recipient Email:</label>
+  <input type="email" id="recipient" placeholder="example@gmail.com">
 
   <button onclick="generateEmail()">Generate Email</button>
 
   <h3>Result:</h3>
   <pre id="result"></pre>
+
+  <!-- 🔥 Gmail Button -->
+  <button class="gmail-btn" onclick="openGmail()">Open in Gmail ✉️</button>
 
   <hr>
 
@@ -132,6 +139,42 @@
       } catch (err) {
           alert("Error generating email ❌");
       }
+  }
+
+  // 🔥 FINAL GMAIL FUNCTION (FULLY FIXED)
+  function openGmail() {
+
+      const text = document.getElementById("result").innerText;
+      const recipient = document.getElementById("recipient").value;
+
+      if (!text) {
+          alert("Generate email first ❗");
+          return;
+      }
+
+      if (!recipient) {
+          alert("Enter recipient email ❗");
+          return;
+      }
+
+      const lines = text.split("\n");
+
+      const subject = encodeURIComponent(
+          lines[0].replace("Subject:", "").trim()
+      );
+
+      const body = encodeURIComponent(
+          lines.slice(2).join("\n").trim()
+      );
+
+      const gmailUrl =
+          "https://mail.google.com/mail/?view=cm&fs=1" +
+          "&to=" + encodeURIComponent(recipient) +
+          "&su=" + subject +
+          "&body=" + body;
+
+      // redirect (no popup block)
+      window.location.href = gmailUrl;
   }
 
   async function loadHistory() {
